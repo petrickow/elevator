@@ -8,12 +8,16 @@ public class Simulation {
         System.out.println("Starting smarting + argsLen: " + args.length);
 
         /* TODO:
-         * Setup --> antall heiser, antall besøkende, ticks -->
+         * Setup --> antall heiser, besøkende, ticks -->
          * Modeller:
           * Tick
           * Elevator
           * Building
           * Agent
          */
+    }
+
+    public int initSimulation(int numElevators, int ) {
+
     }
 }
