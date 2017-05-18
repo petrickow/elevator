@@ -12,7 +12,7 @@ public class Building {
 
     List<Floor> floors;
     List<Visitor> currentVisitors;
-    List<Elevator> elevators;
+    ElevatorManager elevatorManager;
 
     public Building(int numFloors, int numElevators) {
         floors = new ArrayList<Floor>(numFloors);
@@ -20,10 +20,7 @@ public class Building {
             floors.add(new Floor(i));
         }
 
-        elevators = new ArrayList<Elevator>(numElevators);
-        for (int i = 0; i < numElevators ; i++) {
-            elevators.add(new Elevator(i));
-        }
+        elevatorManager = new ElevatorManager(numElevators);
 
         floors.stream().forEach(floor -> System.out.println("Hello " + floor.level));
     }

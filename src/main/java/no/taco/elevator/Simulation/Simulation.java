@@ -10,8 +10,7 @@ public class Simulation {
     private final int numTicks;
     private final int numVisitors;
     private final SimulationState[] stateArray;
-    SimulationState currentState;
-    Building building;
+    private Building building;
 
     public Simulation(Building building, int numTicks, int numVisitors) {
         this.building = building;
@@ -30,6 +29,17 @@ public class Simulation {
     }
 
     public boolean getGoing() {
+
+
         return false;
     }
+
+
+    /// Simulation step:
+    // # Move elevators (as per request)
+    // # Move visitors in out of elevator-queues
+    // #
+    // #
+
+    /// Request handling
 }

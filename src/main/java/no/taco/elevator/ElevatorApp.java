@@ -21,8 +21,8 @@ public class ElevatorApp {
         Building building = new Building(numFloors,numElevators);
         Simulation sim = new Simulation(building, numTicks, numVisitors);
 
+        //result stored in-memory
         sim.getGoing();
-
     }
 }
 
