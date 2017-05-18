@@ -1,7 +1,8 @@
 package no.taco.elevator.Simulation;
 
-/**
- * Created by catoda on 18.05.17.
+/***
+ * Tick <- klokke, holder styr på tidsforløp i simulering
  */
 public class Tick {
+    private SimulationState state;
 }

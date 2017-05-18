@@ -1,7 +1,20 @@
 package no.taco.elevator.Agent;
 
 /**
- * Created by catoda on 18.05.17.
+ * An agent looking to get to **random** floor for **random** amount of time
+ * Will queue for elevator when spawned
  */
 public class Visitor {
+
+    public int intendedFloor;
+    public int stayFor;
+
+    public Visitor() {
+
+    }
+
+    public Visitor(int intendedFloor, int stayFor) {
+        this.intendedFloor = intendedFloor;
+        this.stayFor = stayFor;
+    }
 }
