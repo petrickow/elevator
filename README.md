@@ -1,5 +1,5 @@
 Oppgave:
-=======
+========
 Du skal lage en applikasjon/simulator som styrer et hotell sine heiser. **Hotellet har 20 etasjer**, og hver etasje har 
 egen heisavganger. Hotellet har **minimum 4 heiser**, det vil være opp til kandidaten å avgjøre om flere er nødvendig, 
 da med en begrunnelse til hvorfor flere enn 4 skal være på hotellet. 
@@ -23,3 +23,16 @@ Andre nøkkelord – opp til deg om du vil ta høyde for dem:
 - Køhåndtering
 
 Frist til fredag kl. 15:00 – 19. mai.
+
+Løsning:
+========
+* **Simulation**
+  * **Tick** - diskret tidsenhet (8 timer = 480 minutter)/steg i simuleringen. For enkelhets skyld
+  lar vi en tick være minutt, som vi også lar være operasjonstid for hver
+  oprerasjon (påstigning/avstigning, ¿reisetid pr etasje?, minste oppholdstid for agenter etc). Første 
+  løsning: Hver tick inneholder tilstand for simulering for å kunne gjenskape simulering.
+* **Building** - samlekasse for: 
+  * **Floor** - visitor-teller, exit/entry-point
+  * **Elevator** - max-, current-count
+* **Agent/Visitor** --> Har tilfeldig intensjon og ankomst tid. *Minst 100 unike person pr døgn.*
+ 
