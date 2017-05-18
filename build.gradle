@@ -11,7 +11,7 @@ repositories {
 
 task runApp(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'no.taco.elevator.Simulation'
+    main = 'no.taco.elevator.ElevatorApp'
     // arguments to pass to the application
     args 'dytt', 'inn', 'parametere'
 }
