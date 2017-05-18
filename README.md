@@ -34,5 +34,13 @@ Løsning:
 * **Building** - samlekasse for: 
   * **Floor** - visitor-teller, exit/entry-point
   * **Elevator** - max-, current-count
+  * **Elevator manager** - tar forespørsler, delegerer heiser til forespørsler
 * **Agent/Visitor** --> Har tilfeldig intensjon og ankomst tid. *Minst 100 unike person pr døgn.*
  
+Forbedringer:
+--------
+ 
+Ignorert
+---------
+* Har ikke tatt høyde for beskyttelse av variabler. Det meste er _public_ for å raskt teste implementasjon
+* 

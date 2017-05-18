@@ -34,6 +34,17 @@ public class Elevator {
         *
      */
 
+    public void move() {
+        /*
+
+         */
+
+
+        switch (direction) {
+            case UP: currentFloor++;
+            case DOWN: currentFloor--;
+        }
+    }
 
     /*TODO: list all passengers, or do passengers keep track? */
     public boolean enter(Visitor person) {
