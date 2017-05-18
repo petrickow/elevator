@@ -2,6 +2,8 @@ package no.taco.elevator.Hotel;
 
 import no.taco.elevator.Agent.Visitor;
 
+import java.util.LinkedList;
+
 /**
  * Created by catoda on 18.05.17.
  */
@@ -16,6 +18,7 @@ public class Elevator {
     public int id;
     public int passengers;
     public int currentFloor;
+    public LinkedList<Integer> route;
 
     final int capasity = 8;
 
@@ -27,6 +30,7 @@ public class Elevator {
         direction = ElevatorDirection.STATIONARY;
         passengers = 0;
         currentFloor = 0;
+        route = new LinkedList<>();
     }
 
     /* TODO: update state
@@ -35,11 +39,7 @@ public class Elevator {
      */
 
     public void move() {
-        /*
-
-         */
-
-
+        /*TODO*/
         switch (direction) {
             case UP: currentFloor++;
             case DOWN: currentFloor--;
@@ -56,6 +56,10 @@ public class Elevator {
             passengers++;
             return true;
         }
+    }
+
+    public void addToRoute(int floorLevel) {
+        route.add(new Integer(floorLevel));
     }
 
     public void exit() {

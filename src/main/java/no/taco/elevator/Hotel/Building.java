@@ -15,14 +15,15 @@ public class Building {
     public ElevatorManager elevatorManager;
 
     public Building(int numFloors, int numElevators) {
-        floors = new ArrayList<Floor>(numFloors);
+        floors = new ArrayList<>(numFloors);
         for (int i = 0; i < numFloors ; i++) {
             floors.add(new Floor(i));
         }
         elevatorManager = new ElevatorManager(numElevators);
-        currentVisitors = new ArrayList<Visitor>();
+        currentVisitors = new ArrayList<>();
         //floors.stream().forEach(floor -> System.out.println("Floor " + floor.level + " set up"));
     }
+
 
     public void moveElevators() {
         for (Elevator elevator : elevatorManager.elevators) {
@@ -39,16 +40,12 @@ public class Building {
             for(Visitor v : floor.visitors) {
                 if (floor.level == 0 || v.stayFor == 0) { // quick hack. new arrival or old timer ready to leave, TODO: add flag for
                     floor.queueForTransfer(v);
+                    elevatorManager.requestElevator(v.currentFloor, v.intendedFloor);
                 }
                 else {
                     v.stayFor--;
                 }
             }
         }
-    }
-
-
-    public void assignRequests() {
-
     }
 }

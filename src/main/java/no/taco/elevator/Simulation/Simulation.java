@@ -45,7 +45,8 @@ public class Simulation {
     public boolean getGoing() {
         //TODO: error detection/handling
         for(int i = 1; i <= numTicks; i++) {
-            int arrivedVisitors = spawnVisistors();
+            int arrivedVisitors
+                    = spawnVisistors();
 
             // Check agents, get requests
             building.inspectVisitors();
