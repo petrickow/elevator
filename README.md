@@ -39,6 +39,8 @@ Løsning:
  
 Forbedringer:
 --------
+* Mye global tilstand. Endre design for ryddigere ansvarsfordeling.
+* 
  
 Ignorert
 ---------

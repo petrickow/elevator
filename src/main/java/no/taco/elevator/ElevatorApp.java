@@ -26,8 +26,9 @@ public class ElevatorApp {
     }
 }
 
-/* TODO:
- * Setup --> antall heiser, besøkende, ticks -->
+ /*
+ Setup --> antall heiser, besøkende, ticks -->
+
  * Modeller:
   * Tick <- klokke, holder styr på tidsforløp i simulering
   * Agent <- besøkende, states: fremme, kø, i heis

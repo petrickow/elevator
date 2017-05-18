@@ -25,19 +25,30 @@ public class Building {
     }
 
     public void moveElevators() {
-
         for (Elevator elevator : elevatorManager.elevators) {
             elevator.move();
         }
     }
 
+    /**
+     * Check all visitors on all floors and update state. Either put in queue or update stay counter
+     */
     public void inspectVisitors() {
-        for (Visitor visitor : currentVisitors) {
-            //if (visitor.intendedFloor > visitor.currentFloor) {
 
-            //}
-
-
+        for (Floor floor : floors) {
+            for(Visitor v : floor.visitors) {
+                if (floor.level == 0 || v.stayFor == 0) { // quick hack. new arrival or old timer ready to leave, TODO: add flag for
+                    floor.queueForTransfer(v);
+                }
+                else {
+                    v.stayFor--;
+                }
+            }
         }
+    }
+
+
+    public void assignRequests() {
+
     }
 }

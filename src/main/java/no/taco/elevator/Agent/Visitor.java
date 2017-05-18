@@ -10,12 +10,8 @@ public class Visitor {
     public int stayFor;
     public int currentFloor;
 
-    public Visitor() {
-
-    }
-
     public Visitor(int intendedFloor, int stayFor) {
-        this.intendedFloor = intendedFloor;
+        this.intendedFloor = intendedFloor; //TODO, multifloor visitation intention
         this.stayFor = stayFor;
         this.currentFloor = 0; // Everyone enters through the ground floor, batman is not allowed
     }

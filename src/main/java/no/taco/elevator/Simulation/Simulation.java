@@ -4,7 +4,6 @@ import no.taco.elevator.Hotel.Building;
 import no.taco.elevator.Agent.Visitor;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -39,32 +38,53 @@ public class Simulation {
         return states;
     }
 
+    /**
+     * Main workhorse of simulation
+     * @return true when simulation successfully completed
+     */
     public boolean getGoing() {
-
+        //TODO: error detection/handling
         for(int i = 1; i <= numTicks; i++) {
-            building.currentVisitors.addAll(spawnVisistors());
+            int arrivedVisitors = spawnVisistors();
+
+            // Check agents, get requests
             building.inspectVisitors();
+
+            // building assign requests
+            building.elevatorManager.assignRequests();
+
+            // move elevators
+            //building.elevatorManager.moveElevators();
+
+            // load/unload elevators
+            //building.loadElevators();
         }
 
         System.out.println("Total visitors in simulation: " + totalSpawns);
-        return false;
+        return true;
     }
 
-    private List<Visitor> spawnVisistors() {
+    private int spawnVisistors() {
+        int numberOfArrivingVisitors = 0;
         ArrayList<Visitor> newVisitors = new ArrayList<Visitor>();
         // TODO Add check to ensure the number of visitors is reached
         if (ThreadLocalRandom.current().nextInt(0,spawnFreqency) == 1) { // 1/
-            int numberOfArrivingVisitors = ThreadLocalRandom.current().nextInt(1, maxSimultaniousVisitors + 1); // 1 -> max
+            numberOfArrivingVisitors = ThreadLocalRandom.current().nextInt(1, maxSimultaniousVisitors + 1); // 1 -> max
+
             for (int i = 0; i<numberOfArrivingVisitors; i++) {
-                newVisitors.add(new Visitor(
+
+                Visitor v = new Visitor(
                         ThreadLocalRandom.current().nextInt(0, building.floors.size() +1), // target floor
                         ThreadLocalRandom.current().nextInt(1, 20 +1) // number of ticks on floor
-                ));
+                );
+                building.currentVisitors.add(v);
+
             }
             totalSpawns += numberOfArrivingVisitors;
         }
-        return newVisitors;
+        return numberOfArrivingVisitors;
     }
+
     /// Simulation step:
     // # Check agents, get requests
     // # Get the list of requests for the current tick (and existing ones) --> find elevators on route
