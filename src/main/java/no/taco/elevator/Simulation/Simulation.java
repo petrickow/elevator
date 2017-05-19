@@ -48,7 +48,7 @@ public class Simulation {
         for(int i = 1; i <= stateArray.length; i++) {
             // Start off with creating new visitors
             int arrivedVisitors
-                    = spawnVisistors();
+                    = spawnVisitors();
 
             // Check visitors, get requests
             building.inspectVisitors();
@@ -67,11 +67,11 @@ public class Simulation {
         return true;
     }
 
-    private int spawnVisistors() {
+    private int spawnVisitors() {
         int numberOfArrivingVisitors = 0;
         ArrayList<Visitor> newVisitors = new ArrayList<Visitor>();
         // TODO Add check to ensure the number of visitors is reached
-        if (ThreadLocalRandom.current().nextInt(0,spawnFreqency) == 1) { // 1/
+        if (ThreadLocalRandom.current().nextInt(0,spawnFreqency) == 1) { // 1 in n chance of spawning a dude
             numberOfArrivingVisitors = ThreadLocalRandom.current().nextInt(1, maxSimultaniousVisitors + 1); // 1 -> max
 
             for (int i = 0; i<numberOfArrivingVisitors; i++) {
@@ -81,7 +81,6 @@ public class Simulation {
                         ThreadLocalRandom.current().nextInt(1, 20 +1) // number of ticks on floor
                 );
                 building.currentVisitors.add(v);
-
             }
             totalSpawns += numberOfArrivingVisitors;
         }

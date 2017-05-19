@@ -3,6 +3,7 @@ package no.taco.elevator.Hotel;
 import no.taco.elevator.Agent.Visitor;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * Created by catoda on 18.05.17.
@@ -35,10 +36,10 @@ public class Elevator {
 
 
     public void move() {
-        /*TODO*/
         switch (direction) {
             case UP: currentFloor++;
             case DOWN: currentFloor--;
+            case STATIONARY: break;
         }
     }
 
@@ -58,11 +59,19 @@ public class Elevator {
         passengers--;
     }
 
-
     public void addToRoute(int floorLevel) {
         route.add(new Integer(floorLevel));
+        //route.sort(Integer::compareTo); //? TODO: logic to place the level in between floors to avoid overshooting floors
+    }
+
+    public int currentTarget() throws NoSuchElementException {
+        return route.getFirst().intValue();
     }
 
 
 
 }
+
+
+
+
