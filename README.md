@@ -43,4 +43,4 @@ Prosjektet inkluderer *gradle*-byggfil. Oppgaven for å bygge og kjøre applikas
 * Har ikke tatt høyde for beskyttelse av variabler. Det meste er _public_ for å raskt teste implementasjon
 * Ikke tatt hensyn til testbarhet. Ingen enhetstester. 
 * Mye global tilstand. Endre design for ryddigere ansvarsfordeling og bedre testbarhet
-* Istedet for å endre simulerings-tilstand i alle klasser, kall ut fra **SimulationState**.
+* Istedet for å endre simulerings-state i alle klasser, kall ut fra **SimulationState** for ryddigere logging
