@@ -11,7 +11,7 @@ public class Visitor {
     public int currentFloor;
 
     public Visitor(int intendedFloor, int stayFor) {
-        this.intendedFloor = intendedFloor; //TODO, multifloor visitation intention
+        this.intendedFloor = intendedFloor;
         this.stayFor = stayFor;
         this.currentFloor = 0; // Everyone enters through the ground floor, batman is not allowed
     }

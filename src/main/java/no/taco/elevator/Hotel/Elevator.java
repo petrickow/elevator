@@ -33,10 +33,6 @@ public class Elevator {
         route = new LinkedList<>();
     }
 
-    /* TODO: update state
-        * start traveling when queue empty previous tick or elevator filled
-        *
-     */
 
     public void move() {
         /*TODO*/
@@ -46,24 +42,27 @@ public class Elevator {
         }
     }
 
-    /*TODO: list all passengers, or do passengers keep track? */
+    //WIP
     public boolean enter(Visitor person) {
         if (passengers >= capasity) {
             return false;
         }
         else {
-            //person.update(elevator.id)... something or other
+            //person.update(elevator.id)... something or other TODO Monitoring, keep track of who is in the elevator
             passengers++;
             return true;
         }
     }
 
+    public void exit() {
+        passengers--;
+    }
+
+
     public void addToRoute(int floorLevel) {
         route.add(new Integer(floorLevel));
     }
 
-    public void exit() {
-        passengers--;
-    }
+
 
 }

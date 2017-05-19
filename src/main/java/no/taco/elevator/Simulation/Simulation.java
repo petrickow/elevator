@@ -30,6 +30,7 @@ public class Simulation {
         this.stateArray = prepSimulationState(numTicks);
     }
 
+
     private SimulationState[] prepSimulationState(int numTicks) {
         SimulationState[] states = new SimulationState[numTicks];
         for(int i = 0; i < states.length; i++) {
@@ -44,18 +45,19 @@ public class Simulation {
      */
     public boolean getGoing() {
         //TODO: error detection/handling
-        for(int i = 1; i <= numTicks; i++) {
+        for(int i = 1; i <= stateArray.length; i++) {
+            // Start off with creating new visitors
             int arrivedVisitors
                     = spawnVisistors();
 
-            // Check agents, get requests
+            // Check visitors, get requests
             building.inspectVisitors();
 
             // building assign requests
             building.elevatorManager.assignRequests();
 
             // move elevators
-            //building.elevatorManager.moveElevators();
+            building.elevatorManager.update(); // TODO This is where we left of
 
             // load/unload elevators
             //building.loadElevators();

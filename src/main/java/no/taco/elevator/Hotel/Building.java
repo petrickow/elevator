@@ -38,7 +38,7 @@ public class Building {
 
         for (Floor floor : floors) {
             for(Visitor v : floor.visitors) {
-                if (floor.level == 0 || v.stayFor == 0) { // quick hack. new arrival or old timer ready to leave, TODO: add flag for
+                if (floor.level == 0 || v.stayFor == 0) { // quick hack. new arrival or old timer ready to leave
                     floor.queueForTransfer(v);
                     elevatorManager.requestElevator(v.currentFloor, v.intendedFloor);
                 }
