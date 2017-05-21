@@ -37,12 +37,20 @@ public class Building {
     public void inspectVisitors() {
 
         for (Floor floor : floors) {
-            for(Visitor v : floor.visitors) {
-                if (floor.level == 0 || v.stayFor == 0) { // quick hack. new arrival or old timer ready to leave
+            System.out.printf("Visitors on floor %d: %d\n", floor.level, floor.visitors.size());
+
+            for(Visitor v : floor.visitors) { // TODO: hairy logic, rewrite, separate lobby-logic
+                if (floor.level == 0 && v.stayFor != 0) { // new arrival
                     floor.queueForTransfer(v);
                     elevatorManager.requestElevator(v.currentFloor, v.intendedFloor);
                 }
-                else {
+                else if (floor.level != 0 && v.stayFor == 0) { // old timer, ready to leave
+                    floor.queueForTransfer(v);
+                    elevatorManager.requestElevator(v.currentFloor, v.intendedFloor);
+                } else if (floor.level == 0 && v.stayFor == 0) { // old timer has reached lobby --> leave
+                    currentVisitors.remove(v);
+                }
+                else { // otherwise, we are on a > 0 floor, but want to stay for a bit longer...
                     v.stayFor--;
                 }
             }

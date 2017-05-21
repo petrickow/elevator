@@ -21,8 +21,8 @@ public class Simulation {
 
     public Simulation(Building building, int numTicks, int numVisitors) {
         totalSpawns = 0;
-        spawnFreqency = 3;
-        maxSimultaniousVisitors = 10;
+        spawnFreqency = 2;
+        maxSimultaniousVisitors = 5;
 
         this.building = building;
         this.numTicks = numTicks;
@@ -104,9 +104,13 @@ public class Simulation {
     */
 
     private void printStatus(int itteration) {
-        System.out.printf("Step %d\t\n" +
+        System.out.printf("--> Step %d\t\n" +
                 "Visitors: %d" +
-                "...",
+                "... \n",
                 itteration, building.currentVisitors.size());
+
+        for(Visitor v : building.currentVisitors) {
+            System.out.printf("\tWants to stay for %d on floor: %d\n", v.stayFor, v.currentFloor);
+        }
     }
 }

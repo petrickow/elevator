@@ -14,8 +14,8 @@ public class ElevatorApp {
         //TODO: parse args instead of hardcoded values
         final int numElevators = 4;
         final int numFloors = 20;
-        final int numTicks = 480;
-        final int numVisitors = 100;
+        final int numTicks = 100;
+        final int numVisitors = 30;
 
         //Setup:
         Building building = new Building(numFloors,numElevators);
