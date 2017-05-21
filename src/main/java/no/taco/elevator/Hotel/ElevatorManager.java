@@ -35,17 +35,17 @@ public class ElevatorManager {
                 return;
             }
 
-
-
             if (elevator.currentTarget() == elevator.currentFloor) { // currentTarget throws NoSuchElementException
                 System.out.println("We reached a target");
                 Floor currentFloor = floors.get(elevator.currentFloor);
                 unloadPassengers(elevator, currentFloor); // <-- passengers in elevator moved into floor
 
                 elevator.route.removeFirst();
-                if (elevator.route.isEmpty() && currentFloor.level == 0) {
+                System.out.println(elevator.route.size());
+
+                if (currentFloor.level == 0) { // used to ensure first step is performed correctly
                     elevator.direction = UP;
-                } // TODO make rule for top-floor, and what about
+                } // TODO make rule for top-floor
 
                 if (loadPassengers(elevator, currentFloor) > 0) {
                     System.out.printf("Passengers added, route %d long", elevator.route.size());
@@ -78,6 +78,7 @@ public class ElevatorManager {
             if (visitor.intendedFloor == currentFloor.level) {
                 currentFloor.addVisitor(visitor);
                 toRemove.add(visitor);
+                visitor.currentFloor = currentFloor.level;
             }
         }
         elevator.passengers.removeAll(toRemove);
@@ -107,7 +108,9 @@ public class ElevatorManager {
             Visitor v = floorQueue.remove(0);
             currentFloor.visitors.remove(v);
             elevator.passengers.add(v); // TODO: Let passenger add floor level to route
+
             elevator.route.add(v.intendedFloor);
+            System.out.printf("add %d to ROUTE\n", v.intendedFloor);
         }
 
         return floorQueue.size();
@@ -144,7 +147,7 @@ public class ElevatorManager {
      */
     public void assignRequests() {
         for (Request r : requests) {
-            System.out.printf("r: %s to %d\n", r.direction, r.to);
+            System.out.printf("r: %s to %d from %d\n", r.direction, r.to, r.from);
             naiveAssignment(r);
             // Read this (https://www.amazon.com/Elevator-Traffic-Handbook-Theory-Practice/dp/1138852325) and improve implementation
         }

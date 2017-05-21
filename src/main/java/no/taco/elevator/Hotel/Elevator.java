@@ -46,12 +46,12 @@ public class Elevator {
     }
 
     public void addFloorToRoute(int floorLevel) {
-        route.add(new Integer(floorLevel));
+        route.add(floorLevel);
         //route.sort(Integer::compareTo); //? TODO: logic to place the level in between floors to avoid overshooting floors
     }
 
     public int currentTarget() throws NoSuchElementException {
-        return route.peekFirst().intValue();
+        return route.peekFirst();
     }
 }
 

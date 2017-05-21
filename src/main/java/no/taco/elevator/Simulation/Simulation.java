@@ -80,8 +80,8 @@ public class Simulation {
 
             for (int i = 0; i<numberOfArrivingVisitors; i++) {
                 Visitor v = new Visitor(
-                        ThreadLocalRandom.current().nextInt(0, building.floors.size() +1), // target floor
-                        ThreadLocalRandom.current().nextInt(1, 20) // number of ticks on floor
+                        ThreadLocalRandom.current().nextInt(1, building.floors.size() +1), // target floor
+                        ThreadLocalRandom.current().nextInt(1, 11) // number of ticks on floor
                 );
                 building.currentVisitors.add(v);
                 building.floors.get(0).addVisitor(v);
