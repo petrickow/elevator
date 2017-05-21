@@ -2,7 +2,9 @@ package no.taco.elevator.Hotel;
 
 import no.taco.elevator.Agent.Visitor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -17,9 +19,9 @@ public class Elevator {
 
     public ElevatorDirection direction;
     public int id;
-    public int passengers;
     public int currentFloor;
     public LinkedList<Integer> route;
+    public List <Visitor> passengers;
 
     final int capasity = 8;
 
@@ -29,7 +31,7 @@ public class Elevator {
 
         // all elevators start on the bottom floor with no passengers
         direction = ElevatorDirection.STATIONARY;
-        passengers = 0;
+        passengers = new ArrayList<>();
         currentFloor = 0;
         route = new LinkedList<>();
     }
@@ -43,33 +45,14 @@ public class Elevator {
         }
     }
 
-    //WIP
-    public boolean enter(Visitor person) {
-        if (passengers >= capasity) {
-            return false;
-        }
-        else {
-            //person.update(elevator.id)... something or other TODO Monitoring, keep track of who is in the elevator
-            passengers++;
-            return true;
-        }
-    }
-
-    public void exit() {
-        passengers--;
-    }
-
     public void addToRoute(int floorLevel) {
         route.add(new Integer(floorLevel));
         //route.sort(Integer::compareTo); //? TODO: logic to place the level in between floors to avoid overshooting floors
     }
 
     public int currentTarget() throws NoSuchElementException {
-        return route.getFirst().intValue();
+        return route.peekFirst().intValue();
     }
-
-
-
 }
 
 

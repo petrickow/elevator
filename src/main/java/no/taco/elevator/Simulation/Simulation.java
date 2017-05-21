@@ -46,21 +46,23 @@ public class Simulation {
     public boolean getGoing() {
         //TODO: error detection/handling
         for(int i = 1; i <= stateArray.length; i++) {
+
+            printStatus(i);
             // Start off with creating new visitors
             int arrivedVisitors
                     = spawnVisitors();
 
-            // Check visitors, get requests
+            // Check visitors. Visitors make requests when they need to get moving.
             building.inspectVisitors();
 
-            // building assign requests
+            // assign requests to elevators
             building.elevatorManager.assignRequests();
 
-            // move elevators
-            building.elevatorManager.update(); // TODO This is where we left of
-
-            // load/unload elevators
-            //building.loadElevators();
+            // update elevators includes: (bit to much)
+            //      * elevator movement
+            //      * unload / load passengers
+            //      * update route / direction
+            building.elevatorManager.update(building.floors); //
         }
 
         System.out.println("Total visitors in simulation: " + totalSpawns);
@@ -100,4 +102,11 @@ public class Simulation {
     [2]:
         _FIRST_ iteration: FIFO
     */
+
+    private void printStatus(int itteration) {
+        System.out.printf("Step %d\t\n" +
+                "Visitors: %d" +
+                "...",
+                itteration, building.currentVisitors.size());
+    }
 }
