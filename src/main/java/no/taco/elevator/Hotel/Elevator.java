@@ -23,7 +23,7 @@ public class Elevator {
     public LinkedList<Integer> route;
     public List <Visitor> passengers;
 
-    final int capasity = 8;
+    final int capacity = 8;
 
 
     public Elevator(int id) {
@@ -36,16 +36,16 @@ public class Elevator {
         route = new LinkedList<>();
     }
 
-
     public void move() {
         switch (direction) {
-            case UP: currentFloor++;
-            case DOWN: currentFloor--;
+            case UP: currentFloor++; break;
+            case DOWN: currentFloor--; break;
             case STATIONARY: break;
         }
+        System.out.printf("Elevator %d moved to %d with %d passengers\n\tdirection %s... going to %d\n", id, currentFloor, passengers.size(), direction, route.peekFirst() );
     }
 
-    public void addToRoute(int floorLevel) {
+    public void addFloorToRoute(int floorLevel) {
         route.add(new Integer(floorLevel));
         //route.sort(Integer::compareTo); //? TODO: logic to place the level in between floors to avoid overshooting floors
     }

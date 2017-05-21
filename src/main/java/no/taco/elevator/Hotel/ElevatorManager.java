@@ -3,9 +3,7 @@ package no.taco.elevator.Hotel;
 import no.taco.elevator.Agent.Visitor;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static no.taco.elevator.Hotel.Elevator.ElevatorDirection.DOWN;
 import static no.taco.elevator.Hotel.Elevator.ElevatorDirection.STATIONARY;
@@ -30,34 +28,40 @@ public class ElevatorManager {
      */
     public void update(List<Floor> floors) {
         for (Elevator elevator : elevators) {
-            elevator.move();
 
-            try {
-                if (elevator.direction != STATIONARY && elevator.currentTarget() == elevator.currentFloor) { // currentTarget throws NoSuchElementException
-                    int storedDirectionForRequest = elevator.direction == UP ? 1 : -1;
-                    Floor currentFloor = floors.get(elevator.currentFloor);
-
-                    unloadPassengers(elevator, currentFloor); // <-- passengers in elevator moved into floor
-
-                    //      load passengers from correct queue
-                    // based on route, update direction
-                    int currentLevel = elevator.route.removeFirst();
-
-                    if (elevator.route.isEmpty()) { // no more stops in route
-                        elevator.direction = STATIONARY;
-                    } else { // we still have stops to make, update direction in necessary
-                        elevator.direction = currentLevel < elevator.currentTarget() ? UP : DOWN; // Updates direction
-                        if (loadPassengers(elevator, currentFloor) > 0) {
-                            // if not all passengers get to go, make a new request with the old direction
-                            requestElevator(storedDirectionForRequest, currentFloor.level); // we keep the direction for the new requestx
-                        }
-                    }
-                } else {
-                    //keep on moving?
-                }
-            } catch (NoSuchElementException e) { // ...
+            // check if elevator is moving in the correct direction
+            if (elevator.route.isEmpty()) { // NOthing to do
                 elevator.direction = STATIONARY;
+                return;
             }
+
+
+
+            if (elevator.currentTarget() == elevator.currentFloor) { // currentTarget throws NoSuchElementException
+                System.out.println("We reached a target");
+                Floor currentFloor = floors.get(elevator.currentFloor);
+                unloadPassengers(elevator, currentFloor); // <-- passengers in elevator moved into floor
+
+                elevator.route.removeFirst();
+                if (elevator.route.isEmpty() && currentFloor.level == 0) {
+                    elevator.direction = UP;
+                } // TODO make rule for top-floor, and what about
+
+                if (loadPassengers(elevator, currentFloor) > 0) {
+                    System.out.printf("Passengers added, route %d long", elevator.route.size());
+                // if not all passengers get to go, make a new request with the old direction//      load passengers from correct queue
+                    //requestElevator(currentFloor.level + storedDirectionForRequest, currentFloor.level); // we keep the direction for the new requestx// based on route, update direction
+                }
+
+                if (elevator.route.isEmpty()) { // no more stops in route
+                    elevator.direction = STATIONARY;
+                } else { // we still have stops to make, update direction in necessary
+                    elevator.direction = currentFloor.level < elevator.currentTarget() ? UP : DOWN; // Updates direction
+                }
+            }
+
+            elevator.move(); // increment/decrement currentFloor
+
         }
     }
 
@@ -69,12 +73,15 @@ public class ElevatorManager {
      * @return passengers left in elevator
      */
     private int unloadPassengers(Elevator elevator, Floor currentFloor) {
+        List<Visitor> toRemove = new ArrayList<>();
         for (Visitor visitor : elevator.passengers) {
             if (visitor.intendedFloor == currentFloor.level) {
                 currentFloor.addVisitor(visitor);
-                elevator.passengers.remove(visitor);
+                toRemove.add(visitor);
             }
         }
+        elevator.passengers.removeAll(toRemove);
+
         return elevator.passengers.size();
     }
 
@@ -86,10 +93,21 @@ public class ElevatorManager {
      * @return number of passengers left in elevator
      */
     private int loadPassengers(Elevator elevator, Floor currentFloor) {
-        List<Visitor> floorQueue = elevator.direction == UP ? currentFloor.queueUp : currentFloor.queueDown;
+        // TODO: if we have a stationary elevator, take the queue with the most people?
+        List<Visitor> floorQueue;
+        if (elevator.direction != STATIONARY) {
+            floorQueue = elevator.direction == UP ? currentFloor.queueUp : currentFloor.queueDown;
+        }
+        else {
+            floorQueue = currentFloor.queueUp.size() > currentFloor.queueDown.size() ? currentFloor.queueUp : currentFloor.queueDown;
+            elevator.direction = currentFloor.queueUp.size() > currentFloor.queueDown.size() ? UP : DOWN; // surp
+        }
 
-        while (elevator.passengers.size() < elevator.capasity && floorQueue.size() > 0) {
-            elevator.passengers.add(floorQueue.remove(0));
+        while (elevator.passengers.size() < elevator.capacity && floorQueue.size() > 0) {
+            Visitor v = floorQueue.remove(0);
+            currentFloor.visitors.remove(v);
+            elevator.passengers.add(v); // TODO: Let passenger add floor level to route
+            elevator.route.add(v.intendedFloor);
         }
 
         return floorQueue.size();
@@ -106,16 +124,17 @@ public class ElevatorManager {
     public boolean requestElevator(int to, int from) { // TODO: remove to from Request logic (visitors know where they are going, elevators only need to know when visitor enters)
 
         // * check direction
-        Elevator.ElevatorDirection requestDirection = from > to ? DOWN : UP;
+        Elevator.ElevatorDirection requestDirection = to > from ? UP : DOWN;
 
         // * check if already called
         for (Request r : requests) { // TODO, move this responsibility to each floor
-            if (r.from == from && requestDirection == (r.direction)) {
+            if (r.from == from && requestDirection == r.direction) {
                 return false; // we already have a request in that direction
             }
         }
         // * if not: make request
-        return requests.add(new Request(to, from));
+        requests.add(new Request(to, from));
+        return true;
     }
 
     /**
@@ -125,19 +144,23 @@ public class ElevatorManager {
      */
     public void assignRequests() {
         for (Request r : requests) {
-            NaiveAssignment(r);
+            System.out.printf("r: %s to %d\n", r.direction, r.to);
+            naiveAssignment(r);
             // Read this (https://www.amazon.com/Elevator-Traffic-Handbook-Theory-Practice/dp/1138852325) and improve implementation
         }
+        requests.clear();
+
     }
 
     //TODO: check if we already have an elevator on the same floor
     // TODO: refactor: sort elevators -> stationary, upward, downward. Sort by proximity to request <-- less duplication of code
-    private void NaiveAssignment(Request r) {
-        if (r.direction == UP) {
+    private void naiveAssignment(Request req) {
+        if (req.direction == UP) {
             //direction UP --> get all elevators below (primarily the ones on their way up)
             List<Elevator> upwardElevators = new ArrayList<>();
-            for (Elevator elevator : elevators) { // TODO: rewrite as stream.filter?
-                if (elevator.direction == UP && elevator.currentFloor < r.from) {
+
+            for (Elevator elevator : elevators) {
+                if (elevator.direction == UP && elevator.currentFloor < req.from) {
                     upwardElevators.add(elevator);
                 }
             }
@@ -149,29 +172,30 @@ public class ElevatorManager {
                 selectedElevator = upwardElevators.get(0);
             }
 
-            selectedElevator.addToRoute(r.from);
+            selectedElevator.addFloorToRoute(req.from); //TODO: Visitor should add the to-level when entering
         }
 
-        else if (r.direction == DOWN) {
+        else if (req.direction == DOWN) {
             //direction DOWN --> get all elevators above (primarily the ones on their way down)
             List<Elevator> downwardElevators = new ArrayList<>();
             for (Elevator elevator : elevators) {
-                if (elevator.direction == DOWN && elevator.currentFloor > r.from) {
+                if (elevator.direction == DOWN && elevator.currentFloor > req.from) {
                     downwardElevators.add(elevator);
                 }
             }
             //select one
-            Elevator selectedElevator = elevators.get(0);
+            Elevator selectedElevator = elevators.get(elevators.size()-1); // To vary it up
 
             if (downwardElevators.size() > 0) {
                 //Elevator sortedDownwardElevators = downwardElevators.sort(x -> x.currentFloor); // TODO, find the closest
                 selectedElevator = downwardElevators.get(0);
             }
 
-            selectedElevator.addToRoute(r.from);
+            selectedElevator.addFloorToRoute(req.from);
         }
         else {
-            // TODO error handling
+            // TODO error handling, no request should be STATIONARY
+            System.out.println("****************** ERROR");
         }
     }
 
@@ -182,7 +206,7 @@ public class ElevatorManager {
         public Request(int to, int from) {
             this.to = to;
             this.from = from;
-            direction = from > to ? DOWN : UP;
+            direction = to > from ? UP :DOWN;
         }
     }
 }

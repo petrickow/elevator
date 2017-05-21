@@ -24,34 +24,31 @@ public class Building {
         //floors.stream().forEach(floor -> System.out.println("Floor " + floor.level + " set up"));
     }
 
-
-    public void moveElevators() {
-        for (Elevator elevator : elevatorManager.elevators) {
-            elevator.move();
-        }
-    }
-
     /**
      * Check all visitors on all floors and update state. Either put in queue or update stay counter
      */
     public void inspectVisitors() {
 
         for (Floor floor : floors) {
-            System.out.printf("Visitors on floor %d: %d\n", floor.level, floor.visitors.size());
+            System.out.printf("Visitors on floor %d: %d ...\n", floor.level, floor.visitors.size());
 
             for(Visitor v : floor.visitors) { // TODO: hairy logic, rewrite, separate lobby-logic
-                if (floor.level == 0 && v.stayFor != 0) { // new arrival
+                if (floor.level == 0 && v.stayFor > 0) { // new arrival
                     floor.queueForTransfer(v);
-                    elevatorManager.requestElevator(v.currentFloor, v.intendedFloor);
+                    elevatorManager.requestElevator(v.intendedFloor, v.currentFloor);
                 }
                 else if (floor.level != 0 && v.stayFor == 0) { // old timer, ready to leave
                     floor.queueForTransfer(v);
-                    elevatorManager.requestElevator(v.currentFloor, v.intendedFloor);
-                } else if (floor.level == 0 && v.stayFor == 0) { // old timer has reached lobby --> leave
+                    elevatorManager.requestElevator(0, v.currentFloor);
+                }
+                else if (floor.level == 0 && v.stayFor == 0) { // old timer has reached lobby --> leave
                     currentVisitors.remove(v);
                 }
                 else { // otherwise, we are on a > 0 floor, but want to stay for a bit longer...
                     v.stayFor--;
+                    if (v.stayFor == 0) {
+                        v.intendedFloor = 0;
+                    }
                 }
             }
         }
